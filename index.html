@@ -4,282 +4,162 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoleculeXR — Interactive VR Molecular Dynamics CURE</title>
-  <meta name="description" content="Open-source VR molecular dynamics toolkit for undergraduate chemistry. Investigate HTLV-1 protease inhibitor dynamics using iMD-VR and Python.">
+  <meta name="description" content="Open-source VR molecular dynamics toolkit. Investigate HTLV-1 protease inhibitor dynamics using iMD-VR and Python.">
   <style>
     :root {
-      --bg:       #F7F9FC;
-      --surface:  #FFFFFF;
-      --ink:      #0F1C2E;
-      --ink2:     #2D3E52;
-      --muted:    #6B7B8F;
-      --border:   #E2E8F2;
-      --blue:     #2563EB;
-      --blue-lt:  #EFF4FF;
-      --blue-md:  #BFCFEE;
-      --cyan:     #0891B2;
-      --cyan-lt:  #ECFAFE;
-      --sage:     #4A7C6B;
-      --sage-lt:  #EBF5F0;
-      --amber:    #B45309;
-      --amber-lt: #FEF3E2;
-      --accent:   #1D4ED8;
+      --bg:#F7F9FC; --surface:#fff; --ink:#0F1C2E; --ink2:#2D3E52;
+      --muted:#6B7B8F; --border:#E2E8F2;
+      --blue:#2563EB; --blue-lt:#EFF4FF; --blue-md:#BFCFEE;
+      --cyan:#0891B2; --sage:#4A7C6B; --amber:#B45309;
+      --accent:#1D4ED8;
     }
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body {
-      font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-      background:var(--bg); color:var(--ink); line-height:1.6;
-      overflow-x:hidden;
-    }
-    a { text-decoration:none; color:inherit; }
-    ::-webkit-scrollbar { width:4px; }
-    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden;}
+    a{text-decoration:none;color:inherit;}
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
-    /* ─── NAV ─── */
-    nav {
-      position:fixed; top:0; width:100%; z-index:100;
-      background:rgba(247,249,252,0.92);
-      backdrop-filter:blur(14px);
-      border-bottom:1px solid var(--border);
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 52px; height:58px;
-    }
-    .nav-logo {
-      display:flex; align-items:center; gap:10px;
-      font-size:15px; font-weight:800; color:var(--ink);
-      letter-spacing:-.3px;
-    }
-    .logo-mark {
-      width:30px; height:30px; border-radius:8px;
-      background:var(--accent); display:flex; align-items:center;
-      justify-content:center; font-size:14px; font-weight:900; color:#fff;
-    }
-    .nav-right { display:flex; align-items:center; gap:24px; }
-    .nav-right a { font-size:13px; color:var(--muted); font-weight:500; transition:color .18s; }
-    .nav-right a:hover { color:var(--accent); }
-    .nav-cta {
-      font-size:12px; font-weight:700; padding:7px 18px; border-radius:7px;
-      background:var(--ink); color:#fff; transition:background .15s;
-    }
-    .nav-cta:hover { background:var(--accent); color:#fff !important; }
+    /* NAV */
+    nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(247,249,252,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 52px;height:58px;}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.3px;}
+    .logo-mark{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;}
+    .nav-right{display:flex;align-items:center;gap:24px;}
+    .nav-right a{font-size:13px;color:var(--muted);font-weight:500;transition:color .18s;}
+    .nav-right a:hover{color:var(--accent);}
+    .nav-cta{font-size:12px;font-weight:700;padding:7px 18px;border-radius:7px;background:var(--ink);color:#fff !important;transition:background .15s;}
+    .nav-cta:hover{background:var(--accent);}
 
-    /* ─── HERO ─── */
-    .hero {
-      padding:130px 52px 80px;
-      position:relative; overflow:hidden;
-      background:var(--surface);
-      border-bottom:1px solid var(--border);
-    }
-    /* grid lines decoration */
-    .hero::before {
-      content:'';
-      position:absolute; inset:0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size:48px 48px;
-      opacity:0.5;
-      mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
-    }
-    .hero-inner {
-      max-width:980px; margin:0 auto;
-      position:relative; z-index:1;
-    }
-    .hero-kicker {
-      display:inline-flex; align-items:center; gap:8px;
-      background:var(--blue-lt); border:1px solid var(--blue-md);
-      color:var(--accent); font-size:12px; font-weight:700;
-      text-transform:uppercase; letter-spacing:1px;
-      padding:5px 14px; border-radius:20px; margin-bottom:24px;
-    }
-    .kicker-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); }
-    .hero h1 {
-      font-size:58px; font-weight:800; line-height:1.06;
-      letter-spacing:-2px; color:var(--ink);
-      max-width:760px; margin-bottom:24px;
-    }
-    .hero h1 span { color:var(--accent); }
-    .hero-sub {
-      font-size:18px; color:var(--muted); line-height:1.75;
-      max-width:600px; margin-bottom:36px; font-weight:400;
-    }
-    .hero-btns { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:52px; }
-    .btn-hero-p {
-      display:inline-flex; align-items:center; gap:8px;
-      font-size:14px; font-weight:700; padding:13px 26px; border-radius:9px;
-      background:var(--accent); color:#fff; transition:all .15s;
-      box-shadow:0 4px 14px rgba(29,78,216,.25);
-    }
-    .btn-hero-p:hover { background:#1741B0; box-shadow:0 6px 20px rgba(29,78,216,.35); }
-    .btn-hero-s {
-      display:inline-flex; align-items:center; gap:8px;
-      font-size:14px; font-weight:600; padding:13px 24px; border-radius:9px;
-      border:2px solid var(--border); color:var(--ink2); transition:all .15s;
-    }
-    .btn-hero-s:hover { border-color:var(--accent); color:var(--accent); }
-    .hero-pills { display:flex; flex-wrap:wrap; gap:8px; }
-    .hpill {
-      font-size:11px; font-weight:600; padding:4px 12px;
-      background:var(--bg); border:1px solid var(--border);
-      color:var(--ink2); border-radius:20px;
-    }
+    /* HERO */
+    .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border-bottom:1px solid var(--border);padding-top:58px;}
 
-    /* ─── STATS BAND ─── */
-    .stats-band {
-      background:var(--ink);
-      padding:28px 52px;
-    }
-    .stats-inner {
-      max-width:980px; margin:0 auto;
-      display:grid; grid-template-columns:repeat(4,1fr);
-      gap:1px; background:rgba(255,255,255,.07); border-radius:12px; overflow:hidden;
-    }
-    .stat-cell { background:var(--ink); padding:22px 28px; }
-    .stat-n { font-size:32px; font-weight:800; color:#fff; letter-spacing:-1px; }
-    .stat-n span { font-size:20px; color:#60A5FA; }
-    .stat-l { font-size:11px; color:rgba(255,255,255,.38); text-transform:uppercase; letter-spacing:.9px; margin-top:4px; }
+    /* LEFT PANEL */
+    .hero-left{padding:72px 52px 72px 52px;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;}
+    .hero-kicker{display:inline-flex;align-items:center;gap:8px;background:var(--blue-lt);border:1px solid var(--blue-md);color:var(--accent);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:5px 14px;border-radius:20px;margin-bottom:24px;width:fit-content;}
+    .kicker-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+    .hero h1{font-size:52px;font-weight:800;line-height:1.07;letter-spacing:-2px;color:var(--ink);margin-bottom:20px;}
+    .hero h1 em{color:var(--accent);font-style:normal;}
+    .hero-sub{font-size:17px;color:var(--muted);line-height:1.75;max-width:480px;margin-bottom:36px;}
+    .hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px;}
+    .btn-p{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:13px 24px;border-radius:9px;background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(29,78,216,.25);transition:all .15s;}
+    .btn-p:hover{background:#1741B0;box-shadow:0 6px 20px rgba(29,78,216,.35);}
+    .btn-s{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:13px 22px;border-radius:9px;border:2px solid var(--border);color:var(--ink2);transition:all .15s;}
+    .btn-s:hover{border-color:var(--accent);color:var(--accent);}
+    .hero-pills{display:flex;flex-wrap:wrap;gap:7px;}
+    .hpill{font-size:11px;font-weight:600;padding:4px 12px;background:var(--bg);border:1px solid var(--border);color:var(--ink2);border-radius:20px;}
 
-    /* ─── SECTION ─── */
-    .section { padding:80px 52px; }
-    .section-alt { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
-    .section-inner { max-width:980px; margin:0 auto; }
-    .section-eyebrow {
-      font-size:11px; font-weight:700; color:var(--accent);
-      text-transform:uppercase; letter-spacing:1.2px; margin-bottom:12px;
-    }
-    .section-title {
-      font-size:36px; font-weight:800; letter-spacing:-1px;
-      color:var(--ink); margin-bottom:14px; line-height:1.15;
-    }
-    .section-sub { font-size:16px; color:var(--muted); max-width:540px; line-height:1.75; margin-bottom:48px; }
+    /* RIGHT PANEL — CANVAS */
+    .hero-right{position:relative;overflow:hidden;background:#0D1421;}
+    #md-canvas{width:100%;height:100%;display:block;}
 
-    /* ─── FEATURE GRID ─── */
-    .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    .feat-card {
-      background:var(--bg); border:1px solid var(--border);
-      border-radius:12px; padding:28px;
-      border-top:3px solid transparent;
-      transition:box-shadow .2s, transform .2s;
-    }
-    .feat-card:hover { box-shadow:0 8px 28px rgba(0,0,0,.08); transform:translateY(-2px); }
-    .feat-card.c1 { border-top-color:var(--accent); }
-    .feat-card.c2 { border-top-color:var(--cyan); }
-    .feat-card.c3 { border-top-color:var(--sage); }
-    .feat-card.c4 { border-top-color:var(--amber); }
-    .feat-card.c5 { border-top-color:#7C3AED; }
-    .feat-card.c6 { border-top-color:#DC2626; }
-    .feat-icon {
-      width:44px; height:44px; border-radius:10px;
-      display:flex; align-items:center; justify-content:center;
-      margin-bottom:16px;
-    }
-    .feat-icon svg { width:22px; height:22px; }
-    .feat-card h3 { font-size:15px; font-weight:700; color:var(--ink); margin-bottom:8px; }
-    .feat-card p { font-size:13px; color:var(--muted); line-height:1.7; }
+    /* HUD overlays */
+    .hud{position:absolute;font-family:'Segoe UI',monospace;pointer-events:none;}
+    .hud-tl{top:24px;left:24px;}
+    .hud-tr{top:24px;right:24px;}
+    .hud-bl{bottom:24px;left:24px;}
+    .hud-br{bottom:24px;right:24px;}
+    .hud-box{background:rgba(13,20,33,0.75);border:1px solid rgba(34,211,238,0.2);border-radius:8px;padding:10px 14px;backdrop-filter:blur(8px);}
+    .hud-label{font-size:9px;font-weight:700;color:rgba(34,211,238,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+    .hud-val{font-size:13px;font-weight:700;color:#22D3EE;font-variant-numeric:tabular-nums;}
+    .hud-val.green{color:#34D399;}
+    .hud-val.amber{color:#FBBF24;}
+    .hud-small{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;}
 
-    /* ─── NOTEBOOK SECTION ─── */
-    .nb-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .nb-card {
-      background:var(--bg); border:1px solid var(--border);
-      border-radius:10px; padding:20px 22px;
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
-      transition:border-color .18s, box-shadow .18s;
-    }
-    .nb-card:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(29,78,216,.08); }
-    .nb-num {
-      width:34px; height:34px; border-radius:8px; background:var(--blue-lt);
-      display:flex; align-items:center; justify-content:center;
-      font-size:13px; font-weight:800; color:var(--accent); flex-shrink:0;
-    }
-    .nb-info { flex:1; }
-    .nb-title { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:2px; }
-    .nb-week { font-size:11px; color:var(--muted); }
-    .colab-pill {
-      display:inline-flex; align-items:center; gap:5px;
-      font-size:11px; font-weight:700; padding:5px 12px; border-radius:6px;
-      background:#FF6B00; color:#fff; transition:background .15s; white-space:nowrap; flex-shrink:0;
-    }
-    .colab-pill:hover { background:#D95C00; }
-    .colab-pill svg { width:12px; height:12px; }
+    /* scanning line */
+    .scan-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(34,211,238,0.4),transparent);animation:scan 4s linear infinite;pointer-events:none;}
+    @keyframes scan{0%{top:10%;}100%{top:90%;}}
 
-    /* ─── SUPPLEMENTS GRID ─── */
-    .supp-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-    .supp-card {
-      background:var(--bg); border:1px solid var(--border);
-      border-radius:10px; padding:18px 20px;
-      transition:box-shadow .18s;
-    }
-    .supp-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.06); }
-    .supp-label {
-      font-size:10px; font-weight:700; color:var(--accent);
-      text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px;
-    }
-    .supp-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:4px; }
-    .supp-desc { font-size:12px; color:var(--muted); line-height:1.55; }
+    /* corner brackets */
+    .bracket{position:absolute;width:20px;height:20px;pointer-events:none;}
+    .bracket.tl{top:14px;left:14px;border-top:2px solid rgba(34,211,238,0.5);border-left:2px solid rgba(34,211,238,0.5);}
+    .bracket.tr{top:14px;right:14px;border-top:2px solid rgba(34,211,238,0.5);border-right:2px solid rgba(34,211,238,0.5);}
+    .bracket.bl{bottom:14px;left:14px;border-bottom:2px solid rgba(34,211,238,0.5);border-left:2px solid rgba(34,211,238,0.5);}
+    .bracket.br{bottom:14px;right:14px;border-bottom:2px solid rgba(34,211,238,0.5);border-right:2px solid rgba(34,211,238,0.5);}
 
-    /* ─── CTA ─── */
-    .cta-band {
-      background:var(--accent); padding:72px 52px;
-      position:relative; overflow:hidden;
-    }
-    .cta-band::before {
-      content:'';
-      position:absolute; right:-60px; top:-60px;
-      width:320px; height:320px; border-radius:50%;
-      background:rgba(255,255,255,.06);
-    }
-    .cta-band::after {
-      content:'';
-      position:absolute; left:-40px; bottom:-80px;
-      width:280px; height:280px; border-radius:50%;
-      background:rgba(255,255,255,.04);
-    }
-    .cta-inner { max-width:980px; margin:0 auto; position:relative; z-index:1; }
-    .cta-band h2 { font-size:38px; font-weight:800; letter-spacing:-1px; color:#fff; margin-bottom:12px; }
-    .cta-band p { font-size:16px; color:rgba(255,255,255,.75); max-width:480px; margin-bottom:32px; line-height:1.7; }
-    .cta-btns { display:flex; gap:12px; flex-wrap:wrap; }
-    .cta-p {
-      font-size:14px; font-weight:700; padding:12px 26px; border-radius:8px;
-      background:#fff; color:var(--accent); transition:all .15s;
-    }
-    .cta-p:hover { background:#EFF4FF; }
-    .cta-s {
-      font-size:14px; font-weight:600; padding:12px 24px; border-radius:8px;
-      border:2px solid rgba(255,255,255,.4); color:#fff; transition:all .15s;
-    }
-    .cta-s:hover { border-color:#fff; }
+    /* STATS BAND */
+    .stats-band{background:var(--ink);padding:26px 52px;}
+    .stats-inner{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.07);border-radius:12px;overflow:hidden;}
+    .stat-cell{background:var(--ink);padding:22px 28px;}
+    .stat-n{font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;}
+    .stat-n span{font-size:16px;color:#60A5FA;}
+    .stat-l{font-size:10px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.9px;margin-top:4px;}
 
-    /* ─── FOOTER ─── */
-    footer {
-      background:var(--ink); color:rgba(255,255,255,.3);
-      padding:28px 52px; display:flex; align-items:center; justify-content:space-between;
-      font-size:12px;
-    }
-    footer a { color:rgba(255,255,255,.5); transition:color .15s; }
-    footer a:hover { color:#fff; }
-    .footer-links { display:flex; gap:20px; }
+    /* SECTIONS */
+    .section{padding:80px 52px;}
+    .section-alt{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+    .section-inner{max-width:980px;margin:0 auto;}
+    .sec-eye{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:12px;}
+    .sec-title{font-size:36px;font-weight:800;letter-spacing:-1px;color:var(--ink);margin-bottom:14px;line-height:1.15;}
+    .sec-sub{font-size:16px;color:var(--muted);max-width:540px;line-height:1.75;margin-bottom:48px;}
 
-    /* ─── DIVIDER ─── */
-    .divider { height:1px; background:var(--border); max-width:980px; margin:0 auto; }
+    /* FEATURE GRID */
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .fc{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:28px;border-top:3px solid transparent;transition:box-shadow .2s,transform .2s;}
+    .fc:hover{box-shadow:0 8px 28px rgba(0,0,0,.08);transform:translateY(-2px);}
+    .fc.c1{border-top-color:var(--accent);}
+    .fc.c2{border-top-color:var(--cyan);}
+    .fc.c3{border-top-color:var(--sage);}
+    .fc.c4{border-top-color:var(--amber);}
+    .fc.c5{border-top-color:#7C3AED;}
+    .fc.c6{border-top-color:#DC2626;}
+    .fi{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+    .fi svg{width:22px;height:22px;}
+    .fc h3{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+    .fc p{font-size:13px;color:var(--muted);line-height:1.7;}
 
-    @media(max-width:768px) {
-      nav, .hero, .section, .stats-band, .cta-band, footer { padding-left:20px; padding-right:20px; }
-      .hero h1 { font-size:36px; letter-spacing:-1px; }
-      .feature-grid, .nb-grid, .supp-grid { grid-template-columns:1fr; }
-      .stats-inner { grid-template-columns:repeat(2,1fr); }
+    /* NOTEBOOKS */
+    .nb-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .nbc{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:border-color .18s,box-shadow .18s;}
+    .nbc:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(29,78,216,.08);}
+    .nb-num{width:34px;height:34px;border-radius:8px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--accent);flex-shrink:0;}
+    .nbi{flex:1;}
+    .nb-t{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+    .nb-w{font-size:11px;color:var(--muted);}
+    .colab{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;background:#FF6B00;color:#fff;transition:background .15s;white-space:nowrap;flex-shrink:0;}
+    .colab:hover{background:#D95C00;}
+    .colab svg{width:12px;height:12px;}
+
+    /* SUPPLEMENTS */
+    .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+    .sc{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;transition:box-shadow .18s;}
+    .sc:hover{box-shadow:0 4px 16px rgba(0,0,0,.06);}
+    .sl{font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+    .st{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+    .sd{font-size:12px;color:var(--muted);line-height:1.55;}
+
+    /* CTA */
+    .cta{background:var(--accent);padding:72px 52px;position:relative;overflow:hidden;}
+    .cta::before{content:'';position:absolute;right:-60px;top:-60px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.06);}
+    .cta-inner{max-width:980px;margin:0 auto;position:relative;z-index:1;}
+    .cta h2{font-size:38px;font-weight:800;letter-spacing:-1px;color:#fff;margin-bottom:12px;}
+    .cta p{font-size:16px;color:rgba(255,255,255,.75);max-width:480px;margin-bottom:32px;line-height:1.7;}
+    .cta-btns{display:flex;gap:12px;flex-wrap:wrap;}
+    .cp{font-size:14px;font-weight:700;padding:12px 26px;border-radius:8px;background:#fff;color:var(--accent);transition:all .15s;}
+    .cp:hover{background:#EFF4FF;}
+    .cs{font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;border:2px solid rgba(255,255,255,.4);color:#fff;transition:all .15s;}
+    .cs:hover{border-color:#fff;}
+
+    footer{background:var(--ink);color:rgba(255,255,255,.3);padding:24px 52px;display:flex;align-items:center;justify-content:space-between;font-size:12px;}
+    footer a{color:rgba(255,255,255,.5);transition:color .15s;}
+    footer a:hover{color:#fff;}
+    .fl{display:flex;gap:20px;}
+
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr;grid-template-rows:auto 50vh;}
+      nav,.hero-left,.section,.stats-band,.cta,footer{padding-left:20px;padding-right:20px;}
+      .hero h1{font-size:36px;}
+      .feat-grid,.nb-grid,.sg{grid-template-columns:1fr;}
+      .stats-inner{grid-template-columns:repeat(2,1fr);}
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <div class="nav-logo">
-    <div class="logo-mark">M</div>
-    MoleculeXR
-  </div>
+  <div class="nav-logo"><div class="logo-mark">M</div>MoleculeXR</div>
   <div class="nav-right">
-    <a href="#how-it-works">How It Works</a>
+    <a href="#how">How It Works</a>
     <a href="#notebooks">Notebooks</a>
     <a href="#materials">Materials</a>
     <a href="https://anchikam1.github.io">About</a>
@@ -287,114 +167,92 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
-  <div class="hero-inner">
-    <div class="hero-kicker"><span class="kicker-dot"></span>Open Source · CC BY 4.0 · Google Colab</div>
-    <h1>Hold a molecule.<br><span>Run the research.</span></h1>
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div class="hero-kicker"><span class="kicker-dot"></span>Open Source · CC BY 4.0 · No Install</div>
+    <h1>Hold a molecule.<br><em>Run the research.</em></h1>
     <p class="hero-sub">An open-source VR molecular dynamics toolkit that turns General Chemistry II into a real drug discovery research experience — zero prerequisites, zero installation.</p>
     <div class="hero-btns">
-      <a class="btn-hero-p" href="https://github.com/anchikam1/MoleculeXR">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+      <a class="btn-p" href="https://github.com/anchikam1/MoleculeXR">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
         View Repository
       </a>
-      <a class="btn-hero-s" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_1_Colab_DataAnalysis.ipynb">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <a class="btn-s" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_1_Colab_DataAnalysis.ipynb">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Open Notebook 1
-      </a>
-      <a class="btn-hero-s" href="https://anchikam1.github.io">
-        By Anna K. Manukyan, Ph.D.
       </a>
     </div>
     <div class="hero-pills">
-      <span class="hpill">iMD-VR · Narupa</span>
-      <span class="hpill">MDAnalysis · Python</span>
+      <span class="hpill">Narupa iMD-VR</span>
+      <span class="hpill">MDAnalysis</span>
       <span class="hpill">HTLV-1 Protease</span>
       <span class="hpill">GROMACS</span>
       <span class="hpill">CURE Pedagogy</span>
-      <span class="hpill">J. College Sci. Teaching 2026</span>
+      <span class="hpill">J. Coll. Sci. Teaching 2026</span>
     </div>
+  </div>
+
+  <!-- RIGHT: LIVE MD CANVAS -->
+  <div class="hero-right">
+    <canvas id="md-canvas"></canvas>
+
+    <!-- HUD overlays -->
+    <div class="hud hud-tl hud-box">
+      <div class="hud-label">System</div>
+      <div class="hud-val">HTLV-1 Protease</div>
+      <div class="hud-small">Homodimer · 125 residues/chain</div>
+    </div>
+
+    <div class="hud hud-tr hud-box">
+      <div class="hud-label">Simulation</div>
+      <div class="hud-val green" id="hud-time">t = 0.00 ns</div>
+      <div class="hud-small" id="hud-rmsd">Loop RMSD: 1.42 Å</div>
+    </div>
+
+    <div class="hud hud-bl hud-box">
+      <div class="hud-label">H-Bond Occupancy</div>
+      <div class="hud-val amber" id="hud-hbond">Asp32 → Inh: 84%</div>
+      <div class="hud-small">Loop Res 95 → Inh: 52%</div>
+    </div>
+
+    <div class="hud hud-br hud-box">
+      <div class="hud-label">Inhibitor</div>
+      <div class="hud-val">Statine-class</div>
+      <div class="hud-small">β-hydroxy transition-state analog</div>
+    </div>
+
+    <div class="scan-line"></div>
+    <div class="bracket tl"></div>
+    <div class="bracket tr"></div>
+    <div class="bracket bl"></div>
+    <div class="bracket br"></div>
   </div>
 </div>
 
 <!-- STATS -->
 <div class="stats-band">
   <div class="stats-inner">
-    <div class="stat-cell">
-      <div class="stat-n">5<span> notebooks</span></div>
-      <div class="stat-l">Google Colab · Zero install</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-n">15<span> weeks</span></div>
-      <div class="stat-l">Full semester curriculum</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-n">8<span> supplements</span></div>
-      <div class="stat-l">Student + instructor materials</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-n">0<span> prereqs</span></div>
-      <div class="stat-l">Start from General Chemistry II</div>
-    </div>
+    <div class="stat-cell"><div class="stat-n">5<span> notebooks</span></div><div class="stat-l">Google Colab · Zero install</div></div>
+    <div class="stat-cell"><div class="stat-n">15<span> weeks</span></div><div class="stat-l">Full semester curriculum</div></div>
+    <div class="stat-cell"><div class="stat-n">8<span> supplements</span></div><div class="stat-l">Student + instructor materials</div></div>
+    <div class="stat-cell"><div class="stat-n">0<span> prereqs</span></div><div class="stat-l">Start from Gen Chem II</div></div>
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
-<section class="section" id="how-it-works">
+<!-- HOW -->
+<section class="section" id="how">
   <div class="section-inner">
-    <div class="section-eyebrow">What is MoleculeXR</div>
-    <div class="section-title">Research, not simulation.<br>From day one.</div>
-    <p class="section-sub">Students investigate a real open scientific question — how HTLV-1 protease inhibitor scaffolds affect polyproline loop dynamics — using the same tools as computational research labs.</p>
-    <div class="feature-grid">
-
-      <div class="feat-card c1">
-        <div class="feat-icon" style="background:#EFF4FF;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        </div>
-        <h3>Interactive VR Simulations</h3>
-        <p>Students use Narupa iMD-VR to physically interact with molecular dynamics simulations — steering inhibitors, observing hydrogen bonds, watching the polyproline loop flex in real time.</p>
-      </div>
-
-      <div class="feat-card c2">
-        <div class="feat-icon" style="background:#ECFAFE;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#0891B2" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        </div>
-        <h3>Python Trajectory Analysis</h3>
-        <p>Pre-built Jupyter notebooks guide students through RMSD, RMSF, and H-bond occupancy analysis using MDAnalysis — no coding experience required, just modify and run.</p>
-      </div>
-
-      <div class="feat-card c3">
-        <div class="feat-icon" style="background:#EBF5F0;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C6B" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-        </div>
-        <h3>Real Research Question</h3>
-        <p>How do statine, AHPPA, and HEA inhibitor scaffolds differentially restrict HTLV-1 protease polyproline loop flexibility? This is genuinely open — students discover the answer.</p>
-      </div>
-
-      <div class="feat-card c4">
-        <div class="feat-icon" style="background:#FEF3E2;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        </div>
-        <h3>Full Instructor Support</h3>
-        <p>15-week implementation guide, VR setup instructions, troubleshooting notes, weekly timing plans, and FAQ — designed for instructors with no prior MD or VR experience.</p>
-      </div>
-
-      <div class="feat-card c5">
-        <div class="feat-icon" style="background:#F5F3FF;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-        </div>
-        <h3>Equity-First Design</h3>
-        <p>Built for students with no programming or biochemistry background. All computation runs in Google Colab — just a browser needed. Scaffolded for diverse preparation levels.</p>
-      </div>
-
-      <div class="feat-card c6">
-        <div class="feat-icon" style="background:#FEF2F2;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
-        <h3>Assessed & Published</h3>
-        <p>Accompanying manuscript accepted at <em>Journal of College Science Teaching</em> (2026). Includes 6 assessment rubrics emphasizing scientific reasoning over predetermined outcomes.</p>
-      </div>
-
+    <div class="sec-eye">What is MoleculeXR</div>
+    <div class="sec-title">Research, not simulation.<br>From day one.</div>
+    <p class="sec-sub">Students investigate a real open scientific question about HTLV-1 protease inhibitor dynamics using the same tools as computational research labs.</p>
+    <div class="feat-grid">
+      <div class="fc c1"><div class="fi" style="background:#EFF4FF;"><svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div><h3>Interactive VR Simulations</h3><p>Students use Narupa iMD-VR to physically steer inhibitors, observe hydrogen bond formation, and watch the polyproline loop flex in real time.</p></div>
+      <div class="fc c2"><div class="fi" style="background:#ECFAFE;"><svg viewBox="0 0 24 24" fill="none" stroke="#0891B2" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>Python Trajectory Analysis</h3><p>Pre-built Jupyter notebooks guide RMSD, RMSF, and H-bond occupancy analysis using MDAnalysis — modify parameters and run.</p></div>
+      <div class="fc c3"><div class="fi" style="background:#EBF5F0;"><svg viewBox="0 0 24 24" fill="none" stroke="#4A7C6B" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div><h3>Genuine Research Question</h3><p>How do statine, AHPPA, and HEA inhibitors affect HTLV-1 protease loop dynamics? Three teams, three scaffolds, one open question.</p></div>
+      <div class="fc c4"><div class="fi" style="background:#FEF3E2;"><svg viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><h3>Full Instructor Package</h3><p>15-week guide, VR setup, troubleshooting, timing plans — designed for instructors with no prior MD or VR experience.</p></div>
+      <div class="fc c5"><div class="fi" style="background:#F5F3FF;"><svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h3>Zero Barriers</h3><p>Runs in Google Colab — just a browser. Scaffolded for students with no programming or biochemistry background.</p></div>
+      <div class="fc c6"><div class="fi" style="background:#FEF2F2;"><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3>Peer-Reviewed</h3><p>Manuscript accepted at <em>Journal of College Science Teaching</em> (2026). Six assessment rubrics focused on scientific reasoning.</p></div>
     </div>
   </div>
 </section>
@@ -402,71 +260,15 @@
 <!-- NOTEBOOKS -->
 <section class="section section-alt" id="notebooks">
   <div class="section-inner">
-    <div class="section-eyebrow">Python Notebooks</div>
-    <div class="section-title">Open in one click.</div>
-    <p class="section-sub">All notebooks run in Google Colab. No installation, no account required. Each includes pre-computed fallback data so analysis works even without trajectory files.</p>
+    <div class="sec-eye">Python Notebooks</div>
+    <div class="sec-title">Open in one click.</div>
+    <p class="sec-sub">All notebooks run in Google Colab with pre-computed fallback data — no files needed to start.</p>
     <div class="nb-grid">
-
-      <div class="nb-card">
-        <div class="nb-num">1</div>
-        <div class="nb-info">
-          <div class="nb-title">Colab & Scientific Data Analysis</div>
-          <div class="nb-week">Weeks 2–3 · Statistics, plotting, enthalpy calculations</div>
-        </div>
-        <a class="colab-pill" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_1_Colab_DataAnalysis.ipynb">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Open
-        </a>
-      </div>
-
-      <div class="nb-card">
-        <div class="nb-num">2</div>
-        <div class="nb-info">
-          <div class="nb-title">Molecular Data & PDB Files</div>
-          <div class="nb-week">Week 4 · Atomic coordinates, distances, B-factors</div>
-        </div>
-        <a class="colab-pill" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_2_MolecularData_PDB.ipynb">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Open
-        </a>
-      </div>
-
-      <div class="nb-card">
-        <div class="nb-num">3</div>
-        <div class="nb-info">
-          <div class="nb-title">Lysozyme RMSD — Dress Rehearsal</div>
-          <div class="nb-week">Weeks 5–6 · Trajectory analysis, equilibration, RMSF</div>
-        </div>
-        <a class="colab-pill" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_3_Lysozyme_RMSD.ipynb">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Open
-        </a>
-      </div>
-
-      <div class="nb-card">
-        <div class="nb-num">4</div>
-        <div class="nb-info">
-          <div class="nb-title">Hydrogen Bond Analysis</div>
-          <div class="nb-week">Weeks 6–7 · Occupancy, ΔG calculations, cutoff sensitivity</div>
-        </div>
-        <a class="colab-pill" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_4_HydrogenBondAnalysis.ipynb">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Open
-        </a>
-      </div>
-
-      <div class="nb-card" style="grid-column:1/-1; border-color:var(--blue-md); background:var(--blue-lt);">
-        <div class="nb-num" style="background:#fff;">5</div>
-        <div class="nb-info">
-          <div class="nb-title" style="color:var(--accent);">HTLV-1 Protease Full Research Pipeline</div>
-          <div class="nb-week">Weeks 9–11 · RMSD · RMSF · H-bond occupancy · Cross-team comparison</div>
-        </div>
-        <a class="colab-pill" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_5_HTLV1_Pipeline.ipynb">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Open
-        </a>
-      </div>
-
+      <div class="nbc"><div class="nb-num">1</div><div class="nbi"><div class="nb-t">Colab & Scientific Data Analysis</div><div class="nb-w">Weeks 2–3 · Statistics, plotting, enthalpy</div></div><a class="colab" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_1_Colab_DataAnalysis.ipynb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Open</a></div>
+      <div class="nbc"><div class="nb-num">2</div><div class="nbi"><div class="nb-t">Molecular Data & PDB Files</div><div class="nb-w">Week 4 · Coordinates, distances, B-factors</div></div><a class="colab" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_2_MolecularData_PDB.ipynb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Open</a></div>
+      <div class="nbc"><div class="nb-num">3</div><div class="nbi"><div class="nb-t">Lysozyme RMSD — Dress Rehearsal</div><div class="nb-w">Weeks 5–6 · Trajectory analysis, RMSF</div></div><a class="colab" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_3_Lysozyme_RMSD.ipynb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Open</a></div>
+      <div class="nbc"><div class="nb-num">4</div><div class="nbi"><div class="nb-t">Hydrogen Bond Analysis</div><div class="nb-w">Weeks 6–7 · Occupancy, ΔG calculations</div></div><a class="colab" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_4_HydrogenBondAnalysis.ipynb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Open</a></div>
+      <div class="nbc" style="grid-column:1/-1;border-color:var(--blue-md);background:var(--blue-lt);"><div class="nb-num" style="background:#fff;">5</div><div class="nbi"><div class="nb-t" style="color:var(--accent);">HTLV-1 Protease Full Research Pipeline</div><div class="nb-w">Weeks 9–11 · RMSD · RMSF · H-bond occupancy · Cross-team comparison · Manuscript figures</div></div><a class="colab" href="https://colab.research.google.com/github/anchikam1/MoleculeXR/blob/main/notebooks/Notebook_5_HTLV1_Pipeline.ipynb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Open</a></div>
     </div>
   </div>
 </section>
@@ -474,81 +276,427 @@
 <!-- MATERIALS -->
 <section class="section" id="materials">
   <div class="section-inner">
-    <div class="section-eyebrow">Supplementary Materials</div>
-    <div class="section-title">Everything included.</div>
-    <p class="section-sub">All materials freely available in the GitHub repository under CC BY 4.0. Download any file directly — no account needed.</p>
-    <div class="supp-grid">
-      <div class="supp-card">
-        <div class="supp-label">S1</div>
-        <div class="supp-title">HTLV-1 Protease Primer</div>
-        <div class="supp-desc">15-page student background guide using only Gen Chem II concepts. 9 checkpoint questions with answer key.</div>
-      </div>
-      <div class="supp-card">
-        <div class="supp-label">S2</div>
-        <div class="supp-title">Curated Literature Packet</div>
-        <div class="supp-desc">5 open-access articles with 30+ guided reading questions and cross-cutting synthesis questions.</div>
-      </div>
-      <div class="supp-card">
-        <div class="supp-label">S4</div>
-        <div class="supp-title">Research Proposal Template</div>
-        <div class="supp-desc">Structured 1-page proposal with sentence starters, templates, and a built-in 20-point rubric.</div>
-      </div>
-      <div class="supp-card">
-        <div class="supp-label">S5</div>
-        <div class="supp-title">Assessment Rubrics</div>
-        <div class="supp-desc">6 rubrics covering proposals, notebooks, manuscript, poster, participation, and reflections.</div>
-      </div>
-      <div class="supp-card">
-        <div class="supp-label">S6A</div>
-        <div class="supp-title">ACS Manuscript Template</div>
-        <div class="supp-desc">Section-by-section writing prompts, worked example sentences, ΔG calculation scaffold.</div>
-      </div>
-      <div class="supp-card">
-        <div class="supp-label">S6B</div>
-        <div class="supp-title">Poster Template</div>
-        <div class="supp-desc">48"×36" PowerPoint in professional layout. 7 sections pre-populated with placeholder text.</div>
-      </div>
-      <div class="supp-card">
-        <div class="supp-label">S7</div>
-        <div class="supp-title">Instructor Guide</div>
-        <div class="supp-desc">Complete 15-week implementation guide. VR setup, troubleshooting, timing, and FAQ.</div>
-      </div>
-      <div class="supp-card">
-        <div class="supp-label">S8</div>
-        <div class="supp-title">Backup Trajectories</div>
-        <div class="supp-desc">Pre-computed 10 ns trajectories for all 4 systems. Students always have data to analyze.</div>
-      </div>
+    <div class="sec-eye">Supplementary Materials</div>
+    <div class="sec-title">Everything included.</div>
+    <p class="sec-sub">All materials freely available under CC BY 4.0 — download any file directly from GitHub.</p>
+    <div class="sg">
+      <div class="sc"><div class="sl">S1</div><div class="st">HTLV-1 Protease Primer</div><div class="sd">15-page student guide using only Gen Chem II concepts. 9 checkpoint questions + answer key.</div></div>
+      <div class="sc"><div class="sl">S2</div><div class="st">Literature Packet</div><div class="sd">5 open-access articles with 30+ guided reading questions and synthesis tasks.</div></div>
+      <div class="sc"><div class="sl">S4</div><div class="st">Proposal Template</div><div class="sd">Structured 1-page research proposal with sentence starters and a 20-point rubric.</div></div>
+      <div class="sc"><div class="sl">S5</div><div class="st">Assessment Rubrics</div><div class="sd">6 rubrics: proposal, notebooks, manuscript, poster, participation, reflections.</div></div>
+      <div class="sc"><div class="sl">S6A</div><div class="st">Manuscript Template</div><div class="sd">ACS-style with writing prompts, example sentences, ΔG calculation scaffold.</div></div>
+      <div class="sc"><div class="sl">S6B</div><div class="st">Poster Template</div><div class="sd">48"×36" PowerPoint. 7 sections pre-populated. Print-ready.</div></div>
+      <div class="sc"><div class="sl">S7</div><div class="st">Instructor Guide</div><div class="sd">Complete 15-week plan. VR setup, troubleshooting, week-by-week timing, FAQ.</div></div>
+      <div class="sc"><div class="sl">S8</div><div class="st">Backup Trajectories</div><div class="sd">Pre-computed 10 ns trajectories for all 4 systems. Students always have data.</div></div>
     </div>
     <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
       <a style="font-size:13px;font-weight:600;padding:10px 22px;border-radius:7px;background:var(--accent);color:#fff;" href="https://github.com/anchikam1/MoleculeXR/tree/main/student_materials">Student Materials ↗</a>
       <a style="font-size:13px;font-weight:600;padding:10px 20px;border-radius:7px;border:1.5px solid var(--border);color:var(--ink2);" href="https://github.com/anchikam1/MoleculeXR/tree/main/instructor_materials">Instructor Materials ↗</a>
-      <a style="font-size:13px;font-weight:600;padding:10px 20px;border-radius:7px;border:1.5px solid var(--border);color:var(--ink2);" href="https://github.com/anchikam1/MoleculeXR/tree/main/notebooks">All Notebooks ↗</a>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<div class="cta-band">
+<div class="cta">
   <div class="cta-inner">
     <h2>Ready to use in your course.</h2>
-    <p>Free, open-source, and designed for instructors with no prior molecular dynamics or VR experience. Start with the notebooks or reach out for adoption support.</p>
+    <p>Free, open-source, designed for instructors with no prior MD or VR experience. Adopt the full course or pull individual components.</p>
     <div class="cta-btns">
-      <a class="cta-p" href="https://github.com/anchikam1/MoleculeXR">View Repository</a>
-      <a class="cta-s" href="mailto:amanukyan@hostos.cuny.edu">Contact the Author</a>
+      <a class="cp" href="https://github.com/anchikam1/MoleculeXR">View Repository</a>
+      <a class="cs" href="mailto:amanukyan@hostos.cuny.edu">Contact the Author</a>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
-  <span>MoleculeXR · Anna K. Manukyan, Ph.D. · CUNY Hostos Community College · CC BY 4.0</span>
-  <div class="footer-links">
+  <span>MoleculeXR · Anna K. Manukyan, Ph.D. · CUNY Hostos · CC BY 4.0</span>
+  <div class="fl">
     <a href="https://github.com/anchikam1/MoleculeXR">GitHub</a>
     <a href="https://anchikam1.github.io">About</a>
     <a href="mailto:amanukyan@hostos.cuny.edu">Contact</a>
-    <a href="https://orcid.org/0000-0002-9117-4406">ORCID</a>
   </div>
 </footer>
 
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// MOLECULAR DYNAMICS CANVAS SIMULATION
+// Models: HTLV-1 protease homodimer with inhibitor
+// Visual elements: backbone ribbon, side-chain atoms, bonds, inhibitor,
+//                  hydrogen bond indicators, trajectory trails, RMSD plot
+// ─────────────────────────────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('md-canvas');
+  const container = canvas.parentElement;
+  let W, H, ctx;
+  let t = 0;
+  let frameId;
+
+  // Color palette (dark background)
+  const C = {
+    bg:       '#0D1421',
+    backbone: ['#3B82F6','#60A5FA'],   // chain A, chain B
+    loop:     '#22D3EE',               // polyproline loop highlight
+    inhibitor:'#34D399',               // inhibitor
+    hbond:    'rgba(251,191,36,0.7)',  // hydrogen bond dashes
+    trail:    'rgba(34,211,238,0.15)', // trajectory trail
+    asp:      '#F472B6',               // catalytic Asp residues
+    carbon:   '#94A3B8',
+    nitrogen: '#60A5FA',
+    oxygen:   '#F87171',
+    grid:     'rgba(255,255,255,0.03)',
+  };
+
+  // ── Protein backbone definition ──────────────────────────────────────────
+  // Two sinusoidal chains forming the homodimer, with loop highlighted
+  function buildChain(cx, phase, chainIdx) {
+    const pts = [];
+    const n = 28; // residues to show
+    for (let i = 0; i < n; i++) {
+      const frac = i / (n - 1);
+      // Helical winding along vertical axis with horizontal offset
+      const x = cx + Math.sin(frac * Math.PI * 2.8 + phase) * 52 +
+                     Math.sin(frac * Math.PI * 0.9) * 22;
+      const y = H * 0.12 + frac * H * 0.76;
+      pts.push({ x, y, res: i, chain: chainIdx });
+    }
+    return pts;
+  }
+
+  // ── Inhibitor atoms (small molecule) ─────────────────────────────────────
+  function buildInhibitor(cx, cy) {
+    return [
+      { dx:  0, dy:  0, type:'C', label:'C1' },
+      { dx: 18, dy:-10, type:'O', label:'O1' },
+      { dx: 20, dy: 10, type:'C', label:'C2' },
+      { dx: 38, dy:  2, type:'C', label:'C3' },
+      { dx:-16, dy:-12, type:'N', label:'N1' },
+      { dx:-28, dy:  4, type:'C', label:'C4' },
+      { dx: 12, dy: 22, type:'O', label:'O2' },
+    ].map(a => ({ x: cx + a.dx, y: cy + a.dy, type: a.type, label: a.label }));
+  }
+
+  // Trail history
+  const trailLength = 60;
+  let inhibitorTrail = [];
+  let loopTrail = [];
+
+  // RMSD mini-plot data
+  const rmsdHistory = [];
+  const maxRmsd = 80;
+  let simTime = 0;
+  let rmsdVal = 1.42;
+  let hbondOcc = 0.84;
+
+  function resize() {
+    W = container.offsetWidth;
+    H = container.offsetHeight;
+    canvas.width = W;
+    canvas.height = H;
+    ctx = canvas.getContext('2d');
+  }
+
+  function drawGrid() {
+    ctx.strokeStyle = C.grid;
+    ctx.lineWidth = 1;
+    const step = 48;
+    for (let x = 0; x < W; x += step) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += step) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+  }
+
+  function drawTrail(trail, color) {
+    if (trail.length < 2) return;
+    for (let i = 1; i < trail.length; i++) {
+      const alpha = (i / trail.length) * 0.5;
+      ctx.beginPath();
+      ctx.strokeStyle = color.replace('0.15', alpha.toFixed(2));
+      ctx.lineWidth = 1;
+      ctx.moveTo(trail[i-1].x, trail[i-1].y);
+      ctx.lineTo(trail[i].x, trail[i].y);
+      ctx.stroke();
+    }
+  }
+
+  function drawBackbone(pts, color, isLoop) {
+    if (pts.length < 2) return;
+    // Draw backbone ribbon
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) {
+      const mx = (pts[i-1].x + pts[i].x) / 2;
+      const my = (pts[i-1].y + pts[i].y) / 2;
+      ctx.quadraticCurveTo(pts[i-1].x, pts[i-1].y, mx, my);
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = isLoop ? 2.5 : 1.8;
+    ctx.globalAlpha = isLoop ? 0.85 : 0.55;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  function drawLoopHighlight(pts, loopStart, loopEnd, color) {
+    const loopPts = pts.slice(loopStart, loopEnd + 1);
+    if (loopPts.length < 2) return;
+    ctx.beginPath();
+    ctx.moveTo(loopPts[0].x, loopPts[0].y);
+    for (let i = 1; i < loopPts.length; i++) {
+      ctx.lineTo(loopPts[i].x, loopPts[i].y);
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3.5;
+    ctx.globalAlpha = 0.9;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+  }
+
+  function drawAtom(x, y, r, color, glow) {
+    if (glow) {
+      ctx.beginPath();
+      ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, r * 2.2);
+      grad.addColorStop(0, color.replace(')', ',0.25)').replace('rgb', 'rgba'));
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  function drawResidues(pts, loopStart, loopEnd) {
+    pts.forEach((p, i) => {
+      const isLoop = i >= loopStart && i <= loopEnd;
+      const isAsp  = i === 8 || i === 22;
+      const r = isAsp ? 5.5 : isLoop ? 4 : 3;
+      const col = isAsp ? C.asp : isLoop ? C.loop : C.carbon;
+      drawAtom(p.x, p.y, r, col, isAsp || isLoop);
+    });
+  }
+
+  function drawInhibitor(atoms) {
+    // bonds
+    const bonds = [[0,1],[0,2],[2,3],[0,4],[4,5],[2,6]];
+    bonds.forEach(([a, b]) => {
+      ctx.beginPath();
+      ctx.moveTo(atoms[a].x, atoms[a].y);
+      ctx.lineTo(atoms[b].x, atoms[b].y);
+      ctx.strokeStyle = 'rgba(52,211,153,0.7)';
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+    });
+    // atoms
+    const typeR = { C: 5, O: 4.5, N: 4.5 };
+    const typeC = { C: C.inhibitor, O: C.oxygen, N: C.nitrogen };
+    atoms.forEach(a => {
+      drawAtom(a.x, a.y, typeR[a.type] || 4, typeC[a.type] || C.inhibitor, a.type === 'O');
+    });
+    // glow on inhibitor center
+    ctx.beginPath();
+    ctx.arc(atoms[0].x, atoms[0].y, 14, 0, Math.PI * 2);
+    const grad = ctx.createRadialGradient(atoms[0].x, atoms[0].y, 0, atoms[0].x, atoms[0].y, 14);
+    grad.addColorStop(0, 'rgba(52,211,153,0.18)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+
+  function drawHBond(x1, y1, x2, y2, occ) {
+    const alpha = 0.35 + occ * 0.5;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+    ctx.strokeStyle = C.hbond;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // endpoint dots
+    ctx.beginPath(); ctx.arc(x1, y1, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = C.hbond; ctx.fill();
+    ctx.beginPath(); ctx.arc(x2, y2, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawRmsdPlot(ox, oy, pw, ph) {
+    // background
+    ctx.fillStyle = 'rgba(13,20,33,0.6)';
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(ox, oy, pw, ph, 6) : ctx.rect(ox, oy, pw, ph);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(34,211,238,0.15)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // label
+    ctx.fillStyle = 'rgba(34,211,238,0.5)';
+    ctx.font = '700 9px Segoe UI';
+    ctx.fillText('POLYPROLINE LOOP RMSD (Å)', ox + 8, oy + 13);
+
+    // axes
+    const plotX = ox + 10, plotY = oy + 20, plotW = pw - 20, plotH = ph - 28;
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(plotX, plotY); ctx.lineTo(plotX, plotY + plotH); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(plotX, plotY + plotH); ctx.lineTo(plotX + plotW, plotY + plotH); ctx.stroke();
+
+    if (rmsdHistory.length < 2) return;
+    const recent = rmsdHistory.slice(-maxRmsd);
+    ctx.beginPath();
+    recent.forEach((v, i) => {
+      const px = plotX + (i / (maxRmsd - 1)) * plotW;
+      const py = plotY + plotH - (v / 4) * plotH;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    });
+    ctx.strokeStyle = 'rgba(34,211,238,0.85)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // fill under curve
+    ctx.lineTo(plotX + ((recent.length - 1) / (maxRmsd - 1)) * plotW, plotY + plotH);
+    ctx.lineTo(plotX, plotY + plotH);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(34,211,238,0.07)';
+    ctx.fill();
+
+    // current value label
+    const lastV = recent[recent.length - 1];
+    ctx.fillStyle = '#22D3EE';
+    ctx.font = '700 10px Segoe UI';
+    ctx.fillText(lastV.toFixed(2) + ' Å', plotX + plotW - 36, plotY + 12);
+  }
+
+  function frame() {
+    if (!ctx) return;
+    t += 0.012;
+    simTime += 0.00333; // ~3.3 ps per frame → ~10 ns in ~3000 frames
+
+    // fluctuate RMSD value
+    rmsdVal += (Math.random() - 0.5) * 0.04;
+    rmsdVal = Math.max(0.8, Math.min(2.8, rmsdVal));
+    rmsdHistory.push(rmsdVal);
+    if (rmsdHistory.length > maxRmsd * 3) rmsdHistory.shift();
+
+    // fluctuate H-bond occ display
+    hbondOcc += (Math.random() - 0.5) * 0.008;
+    hbondOcc = Math.max(0.70, Math.min(0.96, hbondOcc));
+
+    // ── Layout ──────────────────────────────────────────────────────────────
+    const cx1 = W * 0.32; // chain A center
+    const cx2 = W * 0.58; // chain B center
+    const loopStart = 14, loopEnd = 22; // residues 91-100 approx
+
+    // Build chains with thermal motion
+    const chainA = buildChain(cx1, 0, 0).map((p, i) => {
+      const amp = (i >= loopStart && i <= loopEnd) ? 6 : 2.5;
+      return {
+        ...p,
+        x: p.x + Math.sin(t * 1.1 + i * 0.5) * amp,
+        y: p.y + Math.cos(t * 0.9 + i * 0.3) * amp * 0.6
+      };
+    });
+    const chainB = buildChain(cx2, Math.PI, 1).map((p, i) => {
+      const amp = (i >= loopStart && i <= loopEnd) ? 5.5 : 2;
+      return {
+        ...p,
+        x: p.x + Math.sin(t * 1.3 + i * 0.4 + 1) * amp,
+        y: p.y + Math.cos(t * 0.8 + i * 0.5 + 1) * amp * 0.5
+      };
+    });
+
+    // Inhibitor position — drifts slightly in active site
+    const aspA = chainA[8]; // catalytic Asp chain A
+    const aspB = chainB[22]; // catalytic Asp chain B
+    const inhCX = (aspA.x + aspB.x) / 2 + Math.sin(t * 0.5) * 3;
+    const inhCY = (aspA.y + aspB.y) / 2 + Math.cos(t * 0.4) * 2;
+    const inhibitor = buildInhibitor(inhCX, inhCY);
+
+    // Trail tracking
+    inhibitorTrail.push({ x: inhibitor[0].x, y: inhibitor[0].y });
+    if (inhibitorTrail.length > trailLength) inhibitorTrail.shift();
+
+    const loopMidA = chainA[Math.floor((loopStart + loopEnd) / 2)];
+    loopTrail.push({ x: loopMidA.x, y: loopMidA.y });
+    if (loopTrail.length > trailLength) loopTrail.shift();
+
+    // ── DRAW ────────────────────────────────────────────────────────────────
+    ctx.fillStyle = C.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    drawGrid();
+
+    // Trails
+    drawTrail(inhibitorTrail, 'rgba(52,211,153,0.15)');
+    drawTrail(loopTrail, 'rgba(34,211,238,0.15)');
+
+    // Backbones
+    drawBackbone(chainA, C.backbone[0], false);
+    drawBackbone(chainB, C.backbone[1], false);
+
+    // Loop highlights
+    drawLoopHighlight(chainA, loopStart, loopEnd, C.loop);
+    drawLoopHighlight(chainB, loopStart, loopEnd, '#818CF8');
+
+    // Residue atoms
+    drawResidues(chainA, loopStart, loopEnd);
+    drawResidues(chainB, loopStart, loopEnd);
+
+    // H-bonds: inhibitor O1 → Asp32 chain A
+    const hbOcc1 = 0.78 + Math.sin(t * 1.2) * 0.12;
+    const hbOcc2 = 0.65 + Math.sin(t * 0.9 + 1) * 0.1;
+    const hbOcc3 = 0.48 + Math.sin(t * 1.5 + 2) * 0.08;
+    drawHBond(inhibitor[1].x, inhibitor[1].y, aspA.x, aspA.y, hbOcc1);
+    drawHBond(inhibitor[4].x, inhibitor[4].y, aspB.x, aspB.y, hbOcc2);
+    // loop contact H-bond
+    const loopRes = chainA[loopStart + 4];
+    drawHBond(inhibitor[6].x, inhibitor[6].y, loopRes.x, loopRes.y, hbOcc3);
+
+    // Inhibitor
+    drawInhibitor(inhibitor);
+
+    // Dimer interface line
+    ctx.save();
+    ctx.setLineDash([6, 6]);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(W * 0.5, H * 0.05); ctx.lineTo(W * 0.5, H * 0.95);
+    ctx.stroke();
+    ctx.restore();
+
+    // RMSD mini-plot (bottom center)
+    drawRmsdPlot(W * 0.5 - 85, H - 100, 170, 84);
+
+    // Update HUD values
+    const hudTime  = document.getElementById('hud-time');
+    const hudRmsd  = document.getElementById('hud-rmsd');
+    const hudHbond = document.getElementById('hud-hbond');
+    if (hudTime)  hudTime.textContent  = `t = ${simTime.toFixed(2)} ns`;
+    if (hudRmsd)  hudRmsd.textContent  = `Loop RMSD: ${rmsdVal.toFixed(2)} Å`;
+    if (hudHbond) hudHbond.textContent = `Asp32 → Inh: ${Math.round(hbondOcc * 100)}%`;
+
+    frameId = requestAnimationFrame(frame);
+  }
+
+  // ── Init ────────────────────────────────────────────────────────────────
+  resize();
+  window.addEventListener('resize', () => { resize(); });
+  frame();
+
+  // Pause when tab hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { cancelAnimationFrame(frameId); }
+    else { t = performance.now() / 1000; frame(); }
+  });
+})();
+</script>
 </body>
 </html>
