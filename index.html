@@ -8,7 +8,7 @@
   <style>
     :root {
       --bg:#F7F9FC; --surface:#fff; --ink:#0F1C2E; --ink2:#2D3E52;
-      --muted:#6B7B8F; --border:#E2E8F2;
+      --muted:#6B7B8F; --border:#EAEEf6;
       --blue:#2563EB; --blue-lt:#EFF4FF; --blue-md:#BFCFEE;
       --cyan:#0891B2; --sage:#4A7C6B; --amber:#B45309;
       --accent:#1D4ED8;
@@ -76,18 +76,18 @@
     .sec-eye{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1.4px;margin-bottom:14px;}
     .sec-title{font-size:42px;font-weight:800;letter-spacing:-1.5px;color:var(--ink);margin-bottom:16px;line-height:1.12;}
     .sec-sub{font-size:18px;color:var(--muted);max-width:560px;line-height:1.75;margin-bottom:56px;}
-    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-    .fc{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:36px 32px;border-top:4px solid transparent;transition:box-shadow .22s,transform .22s;}
-    .fc:hover{box-shadow:0 12px 36px rgba(0,0,0,.1);transform:translateY(-4px);}
-    .fc.c1{border-top-color:var(--accent);} .fc.c2{border-top-color:var(--cyan);} .fc.c3{border-top-color:var(--sage);}
-    .fc.c4{border-top-color:var(--amber);} .fc.c5{border-top-color:#7C3AED;} .fc.c6{border-top-color:#DC2626;}
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+    .fc{background:linear-gradient(160deg,#ffffff 0%,#f5f8fd 100%);border:1px solid rgba(210,220,238,0.7);border-radius:20px;padding:36px 32px;border-top:3px solid transparent;transition:box-shadow .28s,transform .28s;box-shadow:0 2px 12px rgba(0,0,0,.04);}
+    .fc:hover{box-shadow:0 10px 40px rgba(0,0,0,.07);transform:translateY(-3px);}
+    .fc.c1{border-top-color:rgba(37,99,235,0.55);} .fc.c2{border-top-color:rgba(8,145,178,0.55);} .fc.c3{border-top-color:rgba(74,124,107,0.55);}
+    .fc.c4{border-top-color:rgba(180,83,9,0.55);} .fc.c5{border-top-color:rgba(124,58,237,0.55);} .fc.c6{border-top-color:rgba(220,38,38,0.55);}
     .fi{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
     .fi svg{width:26px;height:26px;}
     .fc h3{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:10px;}
     .fc p{font-size:14px;color:var(--muted);line-height:1.75;}
     .nb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-    .nbc{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:24px 26px;display:flex;align-items:center;justify-content:space-between;gap:18px;transition:border-color .18s,box-shadow .18s,transform .18s;}
-    .nbc:hover{border-color:var(--accent);box-shadow:0 6px 20px rgba(29,78,216,.1);transform:translateY(-2px);}
+    .nbc{background:linear-gradient(150deg,#ffffff 0%,#f4f7fd 100%);border:1px solid rgba(210,220,238,0.65);border-radius:16px;padding:24px 26px;display:flex;align-items:center;justify-content:space-between;gap:18px;transition:border-color .22s,box-shadow .22s,transform .22s;box-shadow:0 1px 8px rgba(0,0,0,.04);}
+    .nbc:hover{border-color:rgba(29,78,216,.3);box-shadow:0 8px 28px rgba(29,78,216,.08);transform:translateY(-2px);}
     .nb-num{width:40px;height:40px;border-radius:10px;background:var(--blue-lt);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--accent);flex-shrink:0;}
     .nbi{flex:1;}
     .nb-t{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px;}
@@ -96,8 +96,8 @@
     .colab:hover{background:#D95C00;transform:scale(1.04);}
     .colab svg{width:13px;height:13px;}
     .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-    .sc{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:24px 22px;transition:box-shadow .2s,transform .2s;}
-    .sc:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-3px);}
+    .sc{background:linear-gradient(150deg,#ffffff 0%,#f4f7fd 100%);border:1px solid rgba(210,220,238,0.65);border-radius:16px;padding:24px 22px;transition:box-shadow .24s,transform .24s;box-shadow:0 1px 8px rgba(0,0,0,.04);}
+    .sc:hover{box-shadow:0 8px 28px rgba(0,0,0,.07);transform:translateY(-3px);}
     .sl{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.9px;margin-bottom:10px;}
     .st{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px;}
     .sd{font-size:13px;color:var(--muted);line-height:1.6;}
@@ -178,30 +178,7 @@
   </div>
 </div>
 
-<div class="ticker">
-  <div class="ticker-track">
-    <span class="ticker-item">5 Python Notebooks <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">Zero Installation <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">15-Week Curriculum <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">HTLV-1 Protease Research <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">iMD-VR &#xB7; Narupa <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">CC BY 4.0 Open Source <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">J. Coll. Sci. Teaching 2026 <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">No Prerequisites <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">MDAnalysis &#xB7; GROMACS <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">CURE Pedagogy <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">5 Python Notebooks <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">Zero Installation <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">15-Week Curriculum <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">HTLV-1 Protease Research <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">iMD-VR &#xB7; Narupa <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">CC BY 4.0 Open Source <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">J. Coll. Sci. Teaching 2026 <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">No Prerequisites <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">MDAnalysis &#xB7; GROMACS <span class="ticker-sep">&#xB7;</span></span>
-    <span class="ticker-item">CURE Pedagogy <span class="ticker-sep">&#xB7;</span></span>
-  </div>
-</div>
+
 
 <div class="stats-band">
   <div class="stats-inner">
