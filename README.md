@@ -1,4 +1,4 @@
-# HTLV-1 Protease CURE — Supplementary Materials
+# HTLV-1 Protease Drug Design CURE Project Using Interactive MD in Virtual Reality
 
 **Course:** General Chemistry II Laboratory (CURE Section)  
 **Institution:** CUNY Hostos Community College  
